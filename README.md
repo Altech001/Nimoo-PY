@@ -13,14 +13,14 @@
 
 
 
-Phone number verification via the [Nimo API](https://nimo.xyz).
+Phone number verification
 Give it a phone number; it tells you whether the number is verified and the
 full name registered to it.
 
 - Single-purpose: phone number verification, nothing else
 - Sync and async, first-class (`httpx` under the hood)
 - Fully typed, with one exception per failure mode
-- Accepts human-friendly input (`+256 708-215.305`) and normalizes it
+- Accepts human-friendly input (`+256 700000-05`) and normalizes it
 
 ## Installation
 
@@ -41,10 +41,10 @@ One-shot verification:
 ```python
 from nimoo import verify
 
-result = verify("256708215305")
-print(result.msisdn)  # "256708215305"
+result = verify("256708200000")
+print(result.msisdn)  # "25670800000"
 print(result.status)  # "verified"
-print(result.full_name)  # "ABAASA ALBERT"
+print(result.full_name)  # "ABAASA A"
 print(result.is_verified)  # True
 ```
 
@@ -54,7 +54,7 @@ Reuse a client when verifying many numbers:
 from nimoo import NimoClient
 
 with NimoClient() as client:
-    result = client.verify("+256 (708) 215-305")
+    result = client.verify("+256 (708) 000-305")
 ```
 
 Async:
@@ -66,12 +66,12 @@ from nimoo import averify, AsyncNimoClient
 
 
 async def main():
-    result = await averify("256708215305")
+    result = await averify("2567000000")
 
     # or, reused:
     async with AsyncNimoClient() as client:
         results = await asyncio.gather(
-            client.verify("256708215305"),
+            client.verify("256700000005"),
             client.verify("256770000000"),
         )
 
@@ -82,7 +82,7 @@ asyncio.run(main())
 From the command line:
 
 ```bash
-uv run examples/verify.py 256708215305
+uv run examples/verify.py 2567000000
 ```
 
 ## The result
@@ -110,7 +110,7 @@ All exceptions derive from `nimoo.NimoError`:
 from nimoo import InvalidPhoneNumberError, NetworkError, NimoAPIError, verify
 
 try:
-    result = verify("256708215305")
+    result = verify("256708210000")
 except InvalidPhoneNumberError as exc:
     print(f"bad input: {exc}")
 except NimoAPIError as exc:
@@ -119,17 +119,6 @@ except NetworkError as exc:
     print(f"network problem: {exc}")
 ```
 
-## Configuration
-
-`NimoClient` / `AsyncNimoClient` accept:
-
-- `base_url` — API base URL (default `https://nimo.xyz`)
-- `timeout` — request timeout in seconds (default `15`)
-- `http_client` — an `httpx.Client` / `httpx.AsyncClient` you own (proxies,
-  custom transports, shared connection pools). Injected clients are never
-  closed by nimoo.
-
-The one-shot `verify()` / `averify()` functions accept `base_url` and `timeout`.
 
 ## Development
 
