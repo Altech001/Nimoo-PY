@@ -9,7 +9,7 @@ import httpx
 from nimoo.exceptions import InvalidPhoneNumberError, NetworkError, NimoAPIError
 from nimoo.models import VerificationResult
 
-DEFAULT_BASE_URL = "https://nimo.renult.xyz"
+DEFAULT_BASE_URL = "https://nimo.renult.xyz" or "https://nimoo-two.vercel.app"
 DEFAULT_TIMEOUT = 15.0
 VERIFY_PATH = "/api/v1/phone-msisdn/verify"
 
